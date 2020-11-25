@@ -6,14 +6,14 @@ private const val TAG = "Game2048"
 
 object Game2048 {
     fun interface OnGameOverListener {
-        fun invoke()
+        operator fun invoke()
     }
 
     fun interface OnUpdateDataListener {
-        fun invoke(squares: Array<Array<Int>>)
+        operator fun invoke(squares: Array<Array<Int>>)
     }
 
-    private const val DEFAULT_RANKS = 4 // 默认行列数
+    const val DEFAULT_RANKS = 4 // 默认行列数
     private const val NEXT_NUM_2 = 2 // 下一个数字2
     private const val NEXT_NUM_4 = 4 // 下一个数字4
     private const val DIFFICULTY = 0.2 // 难度(下一个数字生成4而不是2的几率)

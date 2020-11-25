@@ -18,5 +18,10 @@
         android:id="@+id/gameFragment"
         android:name="com.zyg.game2048.fragment.GameFragment"
         android:label="fragment_game"
-        tools:layout="@layout/fragment_game" />
+        tools:layout="@layout/fragment_game" >
+        <argument
+            android:name="ranks"
+            app:argType="integer"
+            android:defaultValue="4" />
+    </fragment>
 </navigation>

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavDirections
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigator
 import androidx.navigation.fragment.NavHostFragment
@@ -21,7 +22,6 @@ abstract class BaseNavFragment : Fragment() {
     }
 
     abstract val layout: Int
-
 
     private val navController by lazy {
         NavHostFragment.findNavController(this)
@@ -65,6 +65,10 @@ abstract class BaseNavFragment : Fragment() {
         navigatorExtras: Navigator.Extras? = null
     ) {
         navController.navigate(resId, args, navOptions, navigatorExtras)
+    }
+
+    fun navigate(directions: NavDirections) {
+        navController.navigate(directions)
     }
 
     fun navigateUp() {

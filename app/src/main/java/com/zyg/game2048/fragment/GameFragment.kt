@@ -2,14 +2,18 @@ package com.zyg.game2048.fragment
 
 import android.os.Bundle
 import android.util.Log
-import android.view.GestureDetector
-import android.view.MotionEvent
+import android.view.*
+import android.widget.ImageView
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.zyg.game2048.R
 import com.zyg.game2048.game.Game2048
 import com.zyg.game2048.util.LogUtil
 import com.zyg.game2048.view.BaseNavFragment
 import com.zyg.game2048.view.OnFlingGestureListener
 import com.zyg.game2048.view.OnTouchListener
+import kotlinx.android.synthetic.main.fragment_game.*
+
 
 class GameFragment : BaseNavFragment(), OnTouchListener {
 
@@ -19,6 +23,11 @@ class GameFragment : BaseNavFragment(), OnTouchListener {
 
     override val layout = R.layout.fragment_game
 
+    val ranks: Int by lazy {
+        arguments?.let {
+            GameFragmentArgs.fromBundle(it).ranks
+        } ?: Game2048.DEFAULT_RANKS
+    }
 
     private val gestureDetector: GestureDetector by lazy {
         GestureDetector(context, object : OnFlingGestureListener() {
@@ -49,12 +58,19 @@ class GameFragment : BaseNavFragment(), OnTouchListener {
         })
     }
 
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        recyclerview_gameGrid.apply {
+            layoutManager = object : GridLayoutManager(context, ranks) {
+                // 禁止recyclerview滑动
+                override fun canScrollHorizontally() = false
+                override fun canScrollVertically() = false
+            }
+            adapter = MyAdapter(ranks)
+        }
 
-        Game2048.start(4)
+        Game2048.start(ranks)
         Game2048.setOnGameOverListener {
             log.i("Game Over")
         }
@@ -68,4 +84,29 @@ class GameFragment : BaseNavFragment(), OnTouchListener {
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         return gestureDetector.onTouchEvent(event)
     }
+}
+
+class MyAdapter(
+    private val ranks: Int
+) :
+    RecyclerView.Adapter<MyAdapter.ViewHolder>() {
+
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val itemBg: ImageView = view.findViewById(R.id.item_bg)
+    }
+
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): ViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.grid_item_2048, parent, false)
+        return ViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.itemBg.setImageResource(R.drawable.item_2048_bg)
+    }
+
+    override fun getItemCount() = ranks * ranks
 }
